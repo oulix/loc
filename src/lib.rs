@@ -579,7 +579,7 @@ impl<'a> Iterator for ByteLinesState<'a> {
     }
 }
 
-//find end frrm
+//find next char boundary
 fn find_end(s: &str, i: usize) -> usize {
     assert!(i < s.len());
     let mut end = i + 1;
