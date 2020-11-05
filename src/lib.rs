@@ -707,7 +707,7 @@ pub fn count(filepath: &str) -> Count {
                     for i in pos..pos + end.len() {
                         //utf8 char patten true-false-false
                         if line.is_char_boundary(i) && !line.is_char_boundary(i + 1) {
-                            pos += i + 1;
+                            pos = i + 2;
                             continue 'outer;
                         }
                     }
