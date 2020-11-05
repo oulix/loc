@@ -579,6 +579,16 @@ impl<'a> Iterator for ByteLinesState<'a> {
     }
 }
 
+//find end frrm
+fn find_end(s: &str, i: usize) -> usize {
+    assert!(i < s.len());
+    let mut end = i + 1;
+    while !s.is_char_boundary(end) {
+        end += 1;
+    }
+    end
+}
+
 // TODO(cgag): do we have to worry about the case of single line comments being nested in multis?
 // I dn't think so but i should think about it.
 pub fn count(filepath: &str) -> Count {
@@ -668,6 +678,7 @@ pub fn count(filepath: &str) -> Count {
                 if contains_utf8 {
                     for i in pos..pos + min(max(start_len, end_len) + 1, line_len - pos) {
                         if !line.is_char_boundary(i) {
+                            pos = find_end(&line, pos);
                             pos += 1;
                             continue 'outer;
                         }
