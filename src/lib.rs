@@ -300,6 +300,8 @@ pub fn lang_from_ext(filepath: &str) -> Lang {
         .expect("to_str")
         .to_lowercase();
 
+    // println!("{}", file_name_lower);
+
     let ext = if file_name_lower.contains("makefile") {
         String::from("makefile")
     } else if file_name_lower == "dockerfile" {
@@ -685,6 +687,14 @@ pub fn count(filepath: &str) -> Count {
                     }
                 }
 
+                // avoid utf8 slice  panic
+                for i in pos..pos + start_len {
+                    if !line.is_char_boundary(i) {
+                        pos += 1;
+                        continue 'outer;
+                    }
+                }
+
                 if pos + start_len <= line_len && &line[pos..pos + start_len] == *start {
                     pos += start_len;
                     multi_stack.push(*multi);
@@ -693,6 +703,14 @@ pub fn count(filepath: &str) -> Count {
 
                 if !multi_stack.is_empty() {
                     let (_, mut end) = multi_stack.last().expect("stack last");
+                    //skip utf8 char
+                    for i in pos..pos + end.len() {
+                        //utf8 char patten true-false-false
+                        if line.is_char_boundary(i) && !line.is_char_boundary(i + 1) {
+                            pos += i + 1;
+                            continue 'outer;
+                        }
+                    }
                     if pos + end.len() <= line_len && &line[pos..pos + end.len()] == end {
                         let _ = multi_stack.pop();
                         pos += end.len();
