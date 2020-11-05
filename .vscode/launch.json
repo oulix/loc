@@ -8,8 +8,10 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug",
-            "program": "${workspaceFolder}/<your program>",
-            "args": [],
+            "program": "${workspaceFolder}/target/debug/loc",
+            "args": [
+                "./tests/data/index.vue"
+            ],
             "cwd": "${workspaceFolder}"
         }
     ]
